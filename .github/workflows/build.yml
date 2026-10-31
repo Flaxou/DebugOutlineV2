@@ -16,11 +16,11 @@ jobs:
           distribution: temurin
           java-version: 21
 
-      - name: Install Gradle 8.10
+      - name: Install Gradle 8.11.1
         run: |
-          wget -q https://services.gradle.org/distributions/gradle-8.10-bin.zip -O /tmp/gradle.zip
+          wget -q https://services.gradle.org/distributions/gradle-8.11.1-bin.zip -O /tmp/gradle.zip
           sudo unzip -q /tmp/gradle.zip -d /opt
-          echo "/opt/gradle-8.10/bin" >> $GITHUB_PATH
+          echo "/opt/gradle-8.11.1/bin" >> $GITHUB_PATH
 
       - name: Check Gradle version
         run: gradle --version
