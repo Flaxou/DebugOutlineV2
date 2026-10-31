@@ -1,19 +1,17 @@
 package com.example.debugoutline;
 
-import com.mojang.blaze3d.pipeline.BlendFunction;
-import com.mojang.blaze3d.pipeline.RenderPipeline;
-import com.mojang.blaze3d.platform.DepthTestFunction;
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.RenderPhase;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.render.WorldRenderer;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
-import net.minecraft.util.math.MatrixStack;
 import net.minecraft.util.math.Vec3d;
 
 import java.util.Set;
@@ -24,33 +22,36 @@ import java.util.Set;
  */
 public final class OutlineRenderer {
 
-    private static final Identifier PIPELINE_ID = Identifier.of("debugoutline", "xray_lines");
-
-    private static final RenderPipeline XRAY_LINES = RenderPipeline.builder(RenderPipelines.RENDERTYPE_LINES_SNIPPET)
-            .withLocation(PIPELINE_ID)
-            .withDepthTest(DepthTestFunction.NO_DEPTH_TEST)
-            .withBlend(BlendFunction.TRANSLUCENT)
-            .withCull(false)
-            .build();
-
+    /** Layer de lignes identique à la vanille, mais sans test de profondeur. */
     static final RenderLayer XRAY_LAYER = RenderLayer.of(
             "debugoutline_xray",
+            VertexFormats.LINES,
+            VertexFormat.DrawMode.LINES,
             1536,
-            XRAY_LINES,
-            RenderLayer.MultiPhaseParameters.builder().build(false)
+            false,
+            true,
+            RenderLayer.MultiPhaseParameters.builder()
+                    .program(RenderPhase.LINES_PROGRAM)
+                    .transparency(RenderPhase.TRANSLUCENT_TRANSPARENCY)
+                    .target(RenderPhase.ITEM_ENTITY_TARGET)
+                    .writeMaskState(RenderPhase.ALL_MASK)
+                    .cull(RenderPhase.DISABLE_CULLING)
+                    .depthTest(RenderPhase.ALWAYS_DEPTH_TEST)
+                    .build(false)
     );
 
     private OutlineRenderer() {}
 
+    /** Retourne le nombre de conteneurs dessinés (diagnostic). */
     public static int render(WorldRenderContext ctx, Set<ContainerType> enabled, boolean tracers, double maxDistance) {
         if (enabled.isEmpty() || ContainerCache.size() == 0) {
             return 0;
         }
-        int[] drawn = {0};
 
         MatrixStack matrices = ctx.matrixStack();
         Vec3d cam = ctx.camera().getPos();
         double maxSq = maxDistance * maxDistance;
+        int[] drawn = {0};
 
         VertexConsumerProvider.Immediate consumers =
                 MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers();
