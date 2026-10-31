@@ -1,0 +1,10 @@
+{
+  "key.debugoutline.toggle": "Activer / désactiver le contour de debug",
+  "key.debugoutline.tracers": "Activer / désactiver les tracers",
+  "key.debugoutline.chest": "Filtre : coffres",
+  "key.debugoutline.trapped": "Filtre : coffres piégés",
+  "key.debugoutline.barrel": "Filtre : barils",
+  "key.debugoutline.shulker": "Filtre : shulkers",
+  "key.debugoutline.rescan": "Forcer un rescan",
+  "category.debugoutline": "Contour de debug"
+}

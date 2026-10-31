@@ -1,0 +1,10 @@
+{
+  "key.debugoutline.toggle": "Toggle debug outline",
+  "key.debugoutline.tracers": "Toggle tracers",
+  "key.debugoutline.chest": "Toggle chests",
+  "key.debugoutline.trapped": "Toggle trapped chests",
+  "key.debugoutline.barrel": "Toggle barrels",
+  "key.debugoutline.shulker": "Toggle shulkers",
+  "key.debugoutline.rescan": "Force rescan",
+  "category.debugoutline": "Debug Outline"
+}
